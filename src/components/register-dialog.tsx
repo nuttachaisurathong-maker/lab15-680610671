@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -61,9 +62,10 @@ export function RegisterDialog({
     setOpen(false);
   };
 
-  const selectedCourse = coursesToSelect.find(
-    (c) => c.courseId === selectedCourseId,
-  );
+  const allCoursesList = courses ?? [];
+  const selectedCourse =
+    allCoursesList.find((c) => c.courseId === selectedCourseId) ??
+    coursesToSelect.find((c) => c.courseId === selectedCourseId);
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -72,27 +74,51 @@ export function RegisterDialog({
         ลงทะเบียน
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[420px]">
-        <DialogHeader>
-          <DialogTitle>ลงทะเบียนรายวิชา</DialogTitle>
+      <DialogContent className="sm:max-w-[440px]">
+        {/* หัวข้อและคำอธิบายตามภาพตัวอย่าง */}
+        <DialogHeader className="space-y-1 text-left">
+          <DialogTitle className="text-lg font-bold">
+            ลงทะเบียนเรียน
+          </DialogTitle>
+          <DialogDescription className="text-sm text-muted-foreground">
+            เลือกวิชาที่ต้องการลงทะเบียน แล้วกรอกข้อมูลให้ครบ
+          </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-4 py-3">
+          {/* 1. วิชา */}
           <div className="grid gap-2">
             <Label htmlFor="course">วิชา</Label>
             <Select
               value={selectedCourseId}
               onValueChange={(val) => setSelectedCourseId(val ?? "")}
             >
-              <SelectTrigger id="course" className="w-full [&>span]:truncate">
-                <SelectValue placeholder="เลือกวิชา" />
-                {selectedCourse
-                  ? `${selectedCourse.courseId} - ${selectedCourse.courseTitle}`
-                  : undefined}
+              <SelectTrigger
+                id="course"
+                className="w-full min-w-0 overflow-hidden"
+              >
+                {selectedCourse ? (
+                  <span className="truncate">
+                    {selectedCourse.courseId} - {selectedCourse.courseTitle}
+                  </span>
+                ) : (
+                  <SelectValue placeholder="เลือกวิชา" />
+                )}
               </SelectTrigger>
-              <SelectContent>
+
+              {/* กว้างเท่ากับ Trigger และรองรับการพับบรรทัดข้อความยาว */}
+              <SelectContent
+                side="bottom"
+                sideOffset={4}
+                alignItemWithTrigger={false}
+                className="w-[var(--anchor-width)] max-w-[calc(100vw-3rem)]"
+              >
                 {coursesToSelect.map((c) => (
-                  <SelectItem key={c.courseId} value={c.courseId}>
+                  <SelectItem
+                    key={c.courseId}
+                    value={c.courseId}
+                    className="whitespace-normal py-2 text-left text-sm leading-snug"
+                  >
                     {c.courseId} - {c.courseTitle}
                   </SelectItem>
                 ))}
@@ -100,6 +126,7 @@ export function RegisterDialog({
             </Select>
           </div>
 
+          {/* 2. เลือกเวลา */}
           <div className="grid gap-2">
             <Label htmlFor="time">เลือกเวลา</Label>
             <Input
@@ -110,6 +137,7 @@ export function RegisterDialog({
             />
           </div>
 
+          {/* 3. ชื่อ นศ. */}
           <div className="grid gap-2">
             <Label htmlFor="student-name">ชื่อ นศ.</Label>
             <Input
@@ -120,6 +148,7 @@ export function RegisterDialog({
             />
           </div>
 
+          {/* 4. โปรแกรม */}
           <div className="grid gap-2">
             <Label htmlFor="program">โปรแกรม</Label>
             <Input
