@@ -61,6 +61,10 @@ export function RegisterDialog({
     setOpen(false);
   };
 
+  const selectedCourse = coursesToSelect.find(
+    (c) => c.courseId === selectedCourseId,
+  );
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger render={<Button className="gap-2 shrink-0" />}>
@@ -82,6 +86,9 @@ export function RegisterDialog({
             >
               <SelectTrigger id="course" className="w-full">
                 <SelectValue placeholder="เลือกวิชา" />
+                {selectedCourse
+                  ? `${selectedCourse.courseId} - ${selectedCourse.courseTitle}`
+                  : undefined}
               </SelectTrigger>
               <SelectContent>
                 {coursesToSelect.map((c) => (
