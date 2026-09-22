@@ -84,7 +84,7 @@ export function RegisterDialog({
               value={selectedCourseId}
               onValueChange={(val) => setSelectedCourseId(val ?? "")}
             >
-              <SelectTrigger id="course" className="w-full">
+              <SelectTrigger id="course" className="w-full [&>span]:truncate">
                 <SelectValue placeholder="เลือกวิชา" />
                 {selectedCourse
                   ? `${selectedCourse.courseId} - ${selectedCourse.courseTitle}`
